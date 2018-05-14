@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+
+
+<p>
+  <strong>Code:</strong>
+  <%= @box.code %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @box.user %>
+</p>
+
+<p>
+  <strong>Kind:</strong>
+  <%= @box.kind %>
+</p>
+
+<% @box.items.each do |item| %>
+  <p><%= item.name %>; Price: <%= humanized_money_with_symbol(item.price) %></p>
+  <%= form_tag orders_path(box: @box) do %>
+    <%= hidden_field_tag 'item_id', item.id %>
+    <%= submit_tag 'Purchase', class: 'btn btn-primary' %>
+  <% end %>
+<% end %>
+
+<%= link_to 'Edit', edit_box_path(@box) %> |
+<%= link_to 'Back', boxes_path %>
