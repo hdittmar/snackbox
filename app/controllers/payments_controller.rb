@@ -41,7 +41,7 @@ private
     @client = Twilio::REST::Client.new(ENV["TWILIO_ACCOUNT_SID"],ENV["TWILIO_AUTH_TOKEN"])
     @client.api.account.messages.create(
       from: ENV["TWILIO_NUMBER"],
-      to: 'driver.phone_number',
+      to: driver.phone_number,
       body: "Hey there! Your passenger bought 1 #{order.item_sku}"
     )
     p "sent"

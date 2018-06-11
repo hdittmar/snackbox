@@ -5,6 +5,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+require_relative "seeds_table"
 
 Item.destroy_all
 Order.destroy_all
@@ -16,27 +17,34 @@ u = User.new
 u.email = "henrik.dittmar@nestim.com"
 u.admin = true
 u.password = "123456"
+u.phone_number = "+4916090613719"
 raise unless u.save
 
-Category.create!(name: "Chocolate")
-Category.create!(name: "Cookie")
-Category.create!(name: "Drink")
+ITEMS.each do |item_hash|
+  item = Item.new
+  item.photo_url = Cloudinary::Uploader.upload("photos/" + item_hash[:photo])
+  item.sku = item_hash[:photo].split(".")[0]
+  item.price = item_hash[:price]
+end
 
 5.times do
   i = Item.new
-  i.photo_url = "https://www.adventskalender.shop/snickers-riegel-50-g"
+  i.photo = "https://www.adventskalender.shop/snickers-riegel-50-g"
   i.name = ["Snickers","Mars","Karl Karlo"].sample
+  i.sku = i.name.
   i.category = Category.all.sample
   i.price_cents = 50 + rand(100)
   i.save
 end
 
-3.times do
+10.times do
   b = Box.new
   b.code = (1000 + rand(8999)).to_s
   b.kind = "5l"
   b.user = u
-  b.items << Item.all.sample
-  b.items << Item.all.sample
+  while b.items.length < 9 do
+    i = Item.all.sample
+    b.items << i unless b.items.include?(i)
+  end
   b.save
 end
